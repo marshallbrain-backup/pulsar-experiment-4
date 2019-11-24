@@ -1,4 +1,7 @@
 package com.marshalldbrain.pulsar.resources
 
-class Resource {
+data class Resource (
+	val type: ResourceType,
+	val amount: Int
+) {
 }

@@ -1,4 +1,7 @@
 package com.marshalldbrain.pulsar.colony.districts
 
-class District {
+data class District (
+	var type: DistrictType,
+	var amount: Int
+) {
 }
