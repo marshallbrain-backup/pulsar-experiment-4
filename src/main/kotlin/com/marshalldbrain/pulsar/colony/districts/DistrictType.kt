@@ -4,8 +4,8 @@ import com.marshalldbrain.pulsar.resources.Resource
 
 data class DistrictType (
 	val id: String,
-	val cost: List<Resource>,
-	val production: List<Resource>,
-	val upkeep: List<Resource>
+	val cost: List<Resource> = emptyList(),
+	val production: List<Resource> = emptyList(),
+	val upkeep: List<Resource> = emptyList()
 ) {
 }

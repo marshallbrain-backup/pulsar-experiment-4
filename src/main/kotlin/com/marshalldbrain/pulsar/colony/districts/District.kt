@@ -2,6 +2,6 @@ package com.marshalldbrain.pulsar.colony.districts
 
 data class District (
 	var type: DistrictType,
-	var amount: Int
+	var amount: Int = 0
 ) {
 }
