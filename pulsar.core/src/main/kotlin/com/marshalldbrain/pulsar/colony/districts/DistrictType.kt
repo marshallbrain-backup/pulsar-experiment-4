@@ -11,4 +11,12 @@ data class DistrictType (
 	val production: List<Resource> = emptyList(),
 	val upkeep: List<Resource> = emptyList()
 ) {
+	
+	val isTooled: Boolean
+		get() = this != emptyDistrict
+	
+	companion object {
+		val emptyDistrict = DistrictType("")
+	}
+	
 }
