@@ -6,7 +6,7 @@ import com.marshalldbrain.pulsar.colony.districts.DistrictType
 data class Colony(val districtTypes: Map<String, DistrictType>) {
 	
 	val districts = MutableList(5) {
-		District(DistrictType(""))
+		District()
 	}
 	val possibleDistrictTypes: Map<String, DistrictType>
 		get() {
