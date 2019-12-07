@@ -1,3 +1,4 @@
 rootProject.name = 'pulsar'
-include 'pulsar.core'
-findProject(':pulsar.pulsar.core')?.name = 'core'
+
+include("pulsar.core")
+include("src.jvm")
