@@ -3,17 +3,11 @@ package com.marshalldbrain.pulsar.colony
 import com.marshalldbrain.pulsar.colony.districts.District
 import com.marshalldbrain.pulsar.colony.districts.DistrictType
 
-data class Colony(val districtTypes: Map<String, DistrictType>) {
+data class Colony(private val allDistrictTypes: Map<String, DistrictType>) {
 	
 	val districts = MutableList(5) {
 		District()
 	}
-	val possibleDistrictTypes: Map<String, DistrictType>
-		get() {
-			return districtTypes.filter { type ->
-				type.value.possible and !districts.any { it.type == type.value }
-			}
-		}
 	
 	init {
 		
@@ -27,5 +21,17 @@ data class Colony(val districtTypes: Map<String, DistrictType>) {
 	private fun min(a: IntRange, b: IntRange): IntRange {
 		return if (a.last > b.last) b else a
 	}
+	
+	val untooledDistricts: List<District>
+		get() {
+			return districts.filter { it.type == DistrictType.emptyDistrict }
+		}
+	
+	val districtTypes: Map<String, DistrictType>
+		get() {
+			return allDistrictTypes.filter { type ->
+				type.value.possible and !districts.any { it.type == type.value }
+			}
+		}
 	
 }
