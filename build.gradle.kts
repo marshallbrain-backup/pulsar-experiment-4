@@ -12,6 +12,7 @@ buildscript {
 
 allprojects {
     
+    group = "com.marshalldbrain"
     version = "0.1"
     
     repositories {
