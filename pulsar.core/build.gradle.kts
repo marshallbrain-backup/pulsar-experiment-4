@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
 	implementation(kotlin("stdlib-common"))
-	implementation("ion:src.common")
+	implementation("com.marshalldbrain.ion:src.common")
 }

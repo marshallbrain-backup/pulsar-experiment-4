@@ -12,7 +12,7 @@ buildscript {
 
 allprojects {
     
-    group = "com.marshalldbrain"
+    group = "com.marshalldbrain.pulsar"
     version = "0.1"
     
     repositories {
