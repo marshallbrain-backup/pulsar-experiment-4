@@ -1,26 +1,41 @@
 package com.marshalldbrain.pulsar.colony.construction
 
+import com.marshalldbrain.pulsar.colony.districts.District
 import com.marshalldbrain.pulsar.resources.Resource
 import kotlin.math.absoluteValue
 
 class ConstructionTask(
-	time: Int,
+	val time: Int,
+	val amount: Int,
 	val cost: List<Resource>,
-	private val onStart: () -> Unit,
-	private val onCancel: () -> Unit,
-	private val onFinnish: () -> Unit,
-	private val whileConstruction: () -> Unit
+	private val onStart: () -> Unit = {},
+	private val onCancel: () -> Unit = {},
+	private val onFinnish: () -> Unit = {},
+	private val whileConstruction: () -> Unit = {}
 ) {
 	
-	var timeRemaining: Int = time
-	private set
+	//"Project"
+	// "Amount\nRemaining"
+	// " % of \n Capacity "
+	// "Production\nRate"
+	// "Time\nRemaining"
+	// "Estimated Completion\nDate"
 	
-	fun passTime(amount: Int): Int {
-		timeRemaining -= amount
-		if (timeRemaining <= 0) {
-			return timeRemaining.absoluteValue
+	constructor(district: District, amount: Int) : this(district.type.time, amount, district.type.cost)
+	
+	var timeRemaining: Int = amount * time
+		private set
+	val amountRemaining: Int
+		get() = timeRemaining / time
+	
+	fun passTime(timePass: Int): Int {
+		val remaining = timeRemaining - timePass
+		if (remaining <= 0) {
+			timeRemaining = 0
+			return remaining.absoluteValue
 		}
-		return 0
+		timeRemaining = remaining
+		return -1
 	}
 	
 	fun onStart() {
