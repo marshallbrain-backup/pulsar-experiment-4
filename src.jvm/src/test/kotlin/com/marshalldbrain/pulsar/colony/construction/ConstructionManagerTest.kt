@@ -72,11 +72,23 @@ private class TaskGen() : Gen<ConstructionTask> {
 	override fun random(): Sequence<ConstructionTask> {
 		return generateSequence {
 			ConstructionTask(
-				Random.Default.nextInt(1, 13),
-				Random.Default.nextInt(1, 6),
-				listOf()
+				ConstructionTask.Type.BUILD,
+				Task(
+					"Task",
+					Random.Default.nextInt(1, 13),
+					listOf()
+				),
+				Random.Default.nextInt(1, 6)
 			)
 		}
 	}
+
+}
+
+private class Task (
+	override val name: String,
+	override val time: Int,
+	override val cost: List<Resource>
+) : Constructable {
 
 }
