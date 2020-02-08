@@ -5,13 +5,9 @@ import com.marshalldbrain.pulsar.resources.Resource
 import kotlin.math.absoluteValue
 
 class ConstructionTask(
-	val time: Int,
-	val amount: Int,
-	val cost: List<Resource>,
-	private val onStart: () -> Unit = {},
-	private val onCancel: () -> Unit = {},
-	private val onFinnish: () -> Unit = {},
-	private val whileConstruction: () -> Unit = {}
+	val type: Type,
+	val target: Constructable,
+	val amount: Int
 ) {
 	
 	//"Project"
@@ -21,12 +17,13 @@ class ConstructionTask(
 	// "Time\nRemaining"
 	// "Estimated Completion\nDate"
 	
-	constructor(district: District, amount: Int) : this(district.type.time, amount, district.type.cost)
-	
-	var timeRemaining: Int = amount * time
+	var timeRemaining: Int = amount * target.time
 		private set
 	val amountRemaining: Int
-		get() = timeRemaining / time
+		get() = timeRemaining / target.time + 1
+	
+	val projectName: String
+		get() = type.name(target)
 	
 	fun passTime(timePass: Int): Int {
 		val remaining = timeRemaining - timePass
@@ -38,20 +35,16 @@ class ConstructionTask(
 		return -1
 	}
 	
-	fun onStart() {
-		onStart.invoke()
+	enum class Type {
+		
+		BUILD {
+			override fun name(target: Constructable): String {
+				return "Building ${target.name}"
+			}
+		};
+		
+		abstract fun name(target: Constructable): String
+		
 	}
 	
-	fun onCancel() {
-		onCancel.invoke()
-	}
-	
-	fun onFinnish() {
-		onFinnish.invoke()
-	}
-	
-	fun whileConstructing() {
-		whileConstruction.invoke()
-	}
-
 }
