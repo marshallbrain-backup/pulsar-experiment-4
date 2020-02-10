@@ -1,5 +1,6 @@
 package com.marshalldbrain.pulsar.colony
 
+import com.marshalldbrain.pulsar.colony.construction.ConstructionManager
 import com.marshalldbrain.pulsar.colony.districts.District
 import com.marshalldbrain.pulsar.colony.districts.DistrictType
 
@@ -8,6 +9,7 @@ data class Colony(private val allDistrictTypes: Set<DistrictType>) {
 	val districts = MutableList(5) {
 		District()
 	}
+	val constructionManager = ConstructionManager()
 	
 	init {
 		
