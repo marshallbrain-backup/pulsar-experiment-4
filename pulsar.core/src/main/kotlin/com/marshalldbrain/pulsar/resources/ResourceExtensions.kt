@@ -6,7 +6,7 @@ operator fun MutableMap<ResourceType, Resource>.plusAssign(resources: Set<Resour
 	
 		val value = this[it.type]
 		if (value != null) {
-			value += it
+			this[it.type] = value + it
 		} else {
 			this[it.type] = it
 		}
@@ -21,7 +21,7 @@ operator fun MutableMap<ResourceType, Resource>.minusAssign(resources: Set<Resou
 		
 		val value = this[it.type]
 		if (value != null) {
-			value -= it
+			this[it.type] = value - it
 		} else {
 			this[it.type] = it
 		}

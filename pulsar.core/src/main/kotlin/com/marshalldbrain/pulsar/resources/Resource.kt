@@ -2,19 +2,21 @@ package com.marshalldbrain.pulsar.resources
 
 data class Resource (
 	val type: ResourceType,
-	var amount: Int = 0
+	val amount: Int = 0
 ) {
 	
-	operator fun plusAssign(resource: Resource) {
+	operator fun plus(resource: Resource): Resource {
 		if (type == resource.type) {
-			amount += resource.amount
+			return Resource(type, amount + resource.amount)
 		}
+		return this
 	}
 	
-	operator fun minusAssign(resource: Resource) {
+	operator fun minus(resource: Resource): Resource {
 		if (type == resource.type) {
-			amount -= resource.amount
+			return Resource(type, amount - resource.amount)
 		}
+		return this
 	}
 	
 }
