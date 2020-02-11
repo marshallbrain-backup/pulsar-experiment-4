@@ -10,12 +10,9 @@ class ConstructionTask(
 	val amount: Int
 ) {
 	
-	//"Project"
-	// "Amount\nRemaining"
-	// " % of \n Capacity "
-	// "Production\nRate"
-	// "Time\nRemaining"
-	// "Estimated Completion\nDate"
+	//TODO move creation to the Constructable
+	//TODO add onComplete value
+	
 	
 	var timeRemaining: Int = amount * target.time
 		private set

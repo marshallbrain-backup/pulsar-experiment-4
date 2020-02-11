@@ -2,7 +2,10 @@ package com.marshalldbrain.pulsar.colony.construction
 
 import com.marshalldbrain.ion.collections.queueOf
 
-class ConstructionManager {
+class ConstructionManager() {
+	
+	//TODO except a ResourceRequester to request resources from a ResourceBucket
+	//TODO invoke the onComplete function from any tasks that are completed
 	
 	val constructionQueue = queueOf<ConstructionTask>()
 	
