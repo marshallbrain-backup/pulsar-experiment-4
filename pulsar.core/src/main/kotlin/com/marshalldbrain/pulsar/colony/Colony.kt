@@ -3,6 +3,7 @@ package com.marshalldbrain.pulsar.colony
 import com.marshalldbrain.pulsar.colony.construction.ConstructionManager
 import com.marshalldbrain.pulsar.colony.districts.District
 import com.marshalldbrain.pulsar.colony.districts.DistrictType
+import com.marshalldbrain.pulsar.resources.ResourceBucket
 
 data class Colony(private val allDistrictTypes: Set<DistrictType>) {
 	
@@ -10,6 +11,7 @@ data class Colony(private val allDistrictTypes: Set<DistrictType>) {
 		District()
 	}
 	val constructionManager = ConstructionManager()
+	val resourceBucket = ResourceBucket(districts)
 	
 	init {
 		
