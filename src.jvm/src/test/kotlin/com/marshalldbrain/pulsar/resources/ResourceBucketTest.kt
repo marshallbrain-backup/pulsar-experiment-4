@@ -1,8 +1,10 @@
 package com.marshalldbrain.pulsar.resources
 
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotlintest.matchers.types.shouldBeSameInstanceAs
 import io.kotlintest.specs.FunSpec
 import kotlin.math.sign
 
@@ -40,6 +42,49 @@ class ResourceBucketTest : FunSpec({
 		
 		bucket.totalProduction.shouldContainExactly(expected)
 	
+	}
+	
+	context("Bank") {
+		
+		test("collection") {
+			
+			val collection = listOf(
+				Collection(
+					setOf(
+						Resource(ResourceType("1"), 10)
+					),
+					setOf(
+						Resource(ResourceType("1"), 5)
+					)
+				)
+			)
+			
+			val expected1 = setOf(
+				Resource(ResourceType("1"), 5)
+			)
+			
+			val expected2 = setOf(
+				Resource(ResourceType("1"), 10)
+			)
+			
+			val bucket = ResourceBucket(collection)
+			
+			bucket.bank.shouldBeEmpty()
+			bucket.collectResources()
+			bucket.bank.shouldContainExactly(expected1)
+			bucket.collectResources()
+			bucket.bank.shouldContainExactly(expected2)
+			
+		}
+		
+		test("same instance") {
+			
+			val bucket = ResourceBucket(emptyList())
+			
+			bucket.bank.shouldBeSameInstanceAs(bucket.bank)
+			
+		}
+		
 	}
 	
 })
