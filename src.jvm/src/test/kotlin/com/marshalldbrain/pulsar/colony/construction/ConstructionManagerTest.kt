@@ -76,7 +76,7 @@ private class TaskGen() : Gen<ConstructionTask> {
 				Task(
 					"Task",
 					Random.Default.nextInt(1, 13),
-					listOf()
+					setOf()
 				),
 				Random.Default.nextInt(1, 6)
 			)
@@ -88,7 +88,7 @@ private class TaskGen() : Gen<ConstructionTask> {
 private class Task (
 	override val name: String,
 	override val time: Int,
-	override val cost: List<Resource>
+	override val cost: Set<Resource>
 ) : Constructable {
 
 }

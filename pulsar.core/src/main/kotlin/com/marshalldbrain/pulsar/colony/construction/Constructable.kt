@@ -6,6 +6,6 @@ interface Constructable {
 	
 	val name: String
 	val time: Int
-	val cost: List<Resource>
+	val cost: Set<Resource>
 
 }
