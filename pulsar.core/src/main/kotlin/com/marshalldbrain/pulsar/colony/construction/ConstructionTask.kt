@@ -1,12 +1,11 @@
 package com.marshalldbrain.pulsar.colony.construction
 
-import com.marshalldbrain.pulsar.colony.districts.District
 import com.marshalldbrain.pulsar.resources.Resource
 import kotlin.math.absoluteValue
 
 class ConstructionTask (
 	val id: String,
-	val type: Type,
+	val type: ConstructionType,
 	val time: Int,
 	val amount: Int,
 	val totalCost: Set<Resource>,
@@ -32,16 +31,6 @@ class ConstructionTask (
 		}
 		timeRemaining = remaining
 		return -1
-	}
-	
-	enum class Type {
-		
-		BUILD {
-			override fun toString(): String {
-				return "Building"
-			}
-		}
-		
 	}
 	
 }
