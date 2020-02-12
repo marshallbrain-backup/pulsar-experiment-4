@@ -19,11 +19,4 @@ class ResourceBucket (vararg sources: List<ResourceCollection>) {
 			
 		}
 	
-	val bank: Set<Resource>
-		get() = bucket.values.toSet()
-	
-	fun collectResources() {
-		bucket += totalProduction
-	}
-	
 }
