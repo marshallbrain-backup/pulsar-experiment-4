@@ -4,13 +4,15 @@ import com.marshalldbrain.pulsar.colony.construction.ConstructionManager
 import com.marshalldbrain.pulsar.colony.districts.District
 import com.marshalldbrain.pulsar.colony.districts.DistrictType
 import com.marshalldbrain.pulsar.resources.ResourceBucket
+import com.marshalldbrain.pulsar.resources.ResourceMaster
 
 data class Colony(private val allDistrictTypes: Set<DistrictType>) {
 	
 	val districts = MutableList(5) {
 		District()
 	}
-	val constructionManager = ConstructionManager()
+	val teller = ResourceMaster()
+	val constructionManager = ConstructionManager(teller)
 	val resourceBucket = ResourceBucket(districts)
 	
 	init {
