@@ -17,7 +17,7 @@ class ConstructionManager(private val resourceTeller: ResourceTeller) {
 		while (remaining > 0 && !constructionQueue.isEmpty()) {
 			remaining = constructionQueue.peek()!!.passTime(remaining)
 			if (remaining >= 0) {
-				constructionQueue.poll()
+				constructionQueue.poll()!!.onComplete.invoke()
 			}
 		}
 	}
