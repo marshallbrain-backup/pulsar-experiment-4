@@ -19,4 +19,6 @@ data class Resource (
 		return this
 	}
 	
+	operator fun unaryMinus() = Resource(type, -amount)
+	
 }
