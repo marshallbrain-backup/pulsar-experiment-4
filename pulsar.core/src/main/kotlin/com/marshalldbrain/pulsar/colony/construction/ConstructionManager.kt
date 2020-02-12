@@ -1,16 +1,15 @@
 package com.marshalldbrain.pulsar.colony.construction
 
 import com.marshalldbrain.ion.collections.queueOf
+import com.marshalldbrain.pulsar.resources.ResourceTeller
 
-class ConstructionManager() {
-	
-	//TODO except a ResourceRequester to request resources from a ResourceBucket
-	//TODO invoke the onComplete function from any tasks that are completed
+class ConstructionManager(private val resourceTeller: ResourceTeller) {
 	
 	val constructionQueue = queueOf<ConstructionTask>()
 	
 	fun addToQueue(task: ConstructionTask) {
 		constructionQueue.add(task)
+		resourceTeller.withdraw(task.totalCost)
 	}
 	
 	fun tick(amount: Int) {
