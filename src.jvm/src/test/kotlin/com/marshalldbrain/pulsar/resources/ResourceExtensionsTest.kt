@@ -49,7 +49,7 @@ class ResourceExtensionsTest : FunSpec({
 		).associateBy { it.type }.toMutableMap()
 		
 		val expected = setOf(
-			Resource(ResourceType("test1"), 5),
+			Resource(ResourceType("test1"), -5),
 			Resource(ResourceType("test2"), 0),
 			Resource(ResourceType("test3"), 5),
 			Resource(ResourceType("test4"), 5)

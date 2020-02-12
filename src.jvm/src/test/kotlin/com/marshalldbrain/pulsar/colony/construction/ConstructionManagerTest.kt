@@ -2,14 +2,15 @@ package com.marshalldbrain.pulsar.colony.construction
 
 import com.marshalldbrain.ion.sequences.randomIntRange
 import com.marshalldbrain.pulsar.resources.Resource
+import com.marshalldbrain.pulsar.resources.ResourceMaster
 import com.marshalldbrain.pulsar.resources.ResourceType
+import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.properties.Gen
 import io.kotlintest.properties.assertAll
-import io.kotlintest.properties.forAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.FunSpec
-import io.mockk.mockk
 import kotlin.random.Random
 
 class ConstructionManagerTest : FunSpec({
@@ -17,8 +18,9 @@ class ConstructionManagerTest : FunSpec({
 	context("Process time") {
 		
 		test("Equal time passed") {
-		
-			val cm = ConstructionManager()
+			
+			val teller = ResourceMaster()
+			val cm = ConstructionManager(teller)
 			val task = TaskGen().random().first()
 			
 			cm.addToQueue(task)
@@ -32,7 +34,8 @@ class ConstructionManagerTest : FunSpec({
 			
 			assertAll(RangedInt(min = 1, max = 10)) { a: Int ->
 				
-				val cm = ConstructionManager()
+				val teller = ResourceMaster()
+				val cm = ConstructionManager(teller)
 				val tasks = TaskGen().random().take(a).toList()
 				
 				val totalTime = tasks.sumBy { it.timeRemaining }
@@ -45,6 +48,35 @@ class ConstructionManagerTest : FunSpec({
 				actual.shouldBe(totalTime)
 				
 			}
+			
+		}
+		
+		test("Triggers onComplete function") {
+			
+			val teller = ResourceMaster()
+			val cm = ConstructionManager(teller)
+			val task = Task("task", 10, emptySet())
+			
+			cm.addToQueue(task.build())
+			cm.tick(task.time)
+			
+			task.built.shouldBeTrue()
+			
+		}
+		
+		test("Withdraws cost") {
+			
+			val teller = ResourceMaster()
+			teller.deposit(setOf(Resource(ResourceType("test"), 10)))
+			
+			val cm = ConstructionManager(teller)
+			val task = Task("task", 10, setOf(Resource(ResourceType("test"), 10)))
+			
+			cm.addToQueue(task.build())
+			cm.tick(task.time)
+			
+			val expected = setOf(Resource(ResourceType("test"), 0))
+			teller.bank.shouldContainExactly(expected)
 			
 		}
 		
@@ -71,24 +103,43 @@ private class TaskGen() : Gen<ConstructionTask> {
 
 	override fun random(): Sequence<ConstructionTask> {
 		return generateSequence {
-			ConstructionTask(
-				ConstructionTask.Type.BUILD,
-				Task(
-					"Task",
-					Random.Default.nextInt(1, 13),
-					setOf()
-				),
-				Random.Default.nextInt(1, 6)
-			)
+			Task(
+				"Task",
+				Random.Default.nextInt(1, 13),
+				setOf()
+			).build(Random.Default.nextInt(1, 6))
 		}
 	}
 
 }
 
 private class Task (
-	override val name: String,
+	override val id: String,
 	override val time: Int,
 	override val cost: Set<Resource>
 ) : Constructable {
+	
+	var built: Boolean = false
+	
+	fun build(amount: Int = 1): ConstructionTask {
+		
+		return ConstructionTask(
+			id,
+			ConstructionType.BUILD,
+			time,
+			amount,
+			cost,
+			onComplete = { built = true }
+		)
+		
+	}
+	
+	override fun createTask(type: ConstructionType, amount: Int): ConstructionTask {
+		
+		return when (type) {
+			ConstructionType.BUILD -> build(amount)
+		}
+		
+	}
 
 }
