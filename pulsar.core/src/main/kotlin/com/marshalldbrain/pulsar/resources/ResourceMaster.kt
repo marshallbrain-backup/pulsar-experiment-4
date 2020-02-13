@@ -1,12 +1,23 @@
 package com.marshalldbrain.pulsar.resources
 
-class ResourceMaster(vararg sources: ResourceCollection) : ResourceTeller {
+class ResourceMaster() : ResourceTeller {
 	
-	private val sourceList = sources.asList()
+	val sourceList = mutableListOf<ResourceCollection>()
 	private val bucket = mutableMapOf<ResourceType, Resource>()
 	
-	val bank: Set<Resource>
-		get() = bucket.values.toSet()
+	val bank: Map<ResourceType, Pair<Resource, Resource>>
+		get() {
+			
+			val totalIncome = mutableMapOf<ResourceType, Resource>()
+			sourceList.forEach {
+				totalIncome += it.income
+			}
+			
+			return bucket.mapValues {
+				Pair(it.value, totalIncome[it.key] ?: Resource(it.key, 0))
+			}
+			
+		}
 	
 	fun collectResources() {
 		sourceList.forEach {
