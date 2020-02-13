@@ -6,12 +6,11 @@ import com.marshalldbrain.pulsar.colony.districts.DistrictType
 import com.marshalldbrain.pulsar.resources.ResourceBucket
 import com.marshalldbrain.pulsar.resources.ResourceMaster
 
-data class Colony(private val allDistrictTypes: Set<DistrictType>) {
+class Colony(private val allDistrictTypes: Set<DistrictType>, teller: ResourceMaster) {
 	
 	val districts = MutableList(5) {
 		District()
 	}
-	val teller = ResourceMaster()
 	val constructionManager = ConstructionManager(teller)
 	val resourceBucket = ResourceBucket(districts)
 	
@@ -21,6 +20,8 @@ data class Colony(private val allDistrictTypes: Set<DistrictType>) {
 		for (i in min(districts.indices, startingDistrictTypes.indices)) {
 			districts[i].type = startingDistrictTypes[i]
 		}
+		
+		teller.sourceList.add(resourceBucket)
 		
 	}
 	
