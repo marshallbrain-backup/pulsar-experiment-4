@@ -20,7 +20,11 @@ data class District (
 		get() = "${type.id} District"
 	override val income: Set<Resource>
 		get() {
-			return type.production + type.upkeep * -1
+			return if(amount == 0) {
+				emptySet()
+			} else {
+				(type.production + type.upkeep * -1) * amount
+			}
 		}
 	
 	fun build(amount: Int = 1): ConstructionTask {
