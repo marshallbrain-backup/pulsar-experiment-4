@@ -27,21 +27,15 @@ class ResourceMasterTest : FunSpec({
 		)
 		
 		val bucket = ResourceBucket(collection)
-		val actual = ResourceMaster(bucket)
+		val actual = ResourceMaster().apply {
+			sourceList.add(bucket)
+		}
 		
-		actual.bank.shouldBeEmpty()
+		actual.bank.toSet().shouldBeEmpty()
 		actual.collectResources()
-		actual.bank.shouldContainExactly(expected1)
+		actual.bank.toSet().shouldContainExactly(expected1)
 		actual.collectResources()
-		actual.bank.shouldContainExactly(expected2)
-		
-	}
-	
-	test("same instance") {
-		
-		val actual = ResourceMaster()
-		
-		actual.bank.shouldBeSameInstanceAs(actual.bank)
+		actual.bank.toSet().shouldContainExactly(expected2)
 		
 	}
 	
@@ -52,7 +46,7 @@ class ResourceMasterTest : FunSpec({
 		
 		teller.deposit(setOf(resource))
 		
-		teller.bank.shouldContainExactly(Resource(ResourceType("test"), 10))
+		teller.bank.toSet().shouldContainExactly(Resource(ResourceType("test"), 10))
 		
 	}
 	
@@ -63,8 +57,16 @@ class ResourceMasterTest : FunSpec({
 		
 		teller.withdraw(setOf(resource))
 		
-		teller.bank.shouldContainExactly(Resource(ResourceType("test"), -10))
+		teller.bank.toSet().shouldContainExactly(Resource(ResourceType("test"), -10))
 		
 	}
 	
-})
+	test("Resource income collection") {
+		TODO("not implemented")
+	}
+	
+}) {
+
+}
+
+fun Map<ResourceType, Pair<Resource, Resource>>.toSet() = this.values.map { it.first }

@@ -4,6 +4,7 @@ import com.marshalldbrain.ion.sequences.randomIntRange
 import com.marshalldbrain.pulsar.resources.Resource
 import com.marshalldbrain.pulsar.resources.ResourceMaster
 import com.marshalldbrain.pulsar.resources.ResourceType
+import com.marshalldbrain.pulsar.resources.toSet
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -76,7 +77,7 @@ class ConstructionManagerTest : FunSpec({
 			cm.tick(task.time)
 			
 			val expected = setOf(Resource(ResourceType("test"), 0))
-			teller.bank.shouldContainExactly(expected)
+			teller.bank.toSet().shouldContainExactly(expected)
 			
 		}
 		
