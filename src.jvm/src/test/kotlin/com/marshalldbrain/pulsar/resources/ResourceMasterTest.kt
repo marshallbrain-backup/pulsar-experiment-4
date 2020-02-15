@@ -62,11 +62,26 @@ class ResourceMasterTest : FunSpec({
 	}
 	
 	test("Resource income collection") {
-		TODO("not implemented")
+		
+		val collection = listOf(
+			Collection(
+				setOf(
+					Resource(ResourceType("1"), 10),
+					Resource(ResourceType("1"), -5)
+				)
+			)
+		)
+		
+		val bucket = ResourceBucket(collection)
+		val actual = ResourceMaster().apply {
+			sourceList.add(bucket)
+		}
+		
+		actual.collectResources()
+		actual.bank.values.map { it.second }.shouldContainExactly(Resource(ResourceType("1"), 5))
+		
 	}
 	
-}) {
-
-}
+})
 
 fun Map<ResourceType, Pair<Resource, Resource>>.toSet() = this.values.map { it.first }
