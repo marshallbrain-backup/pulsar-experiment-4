@@ -1,8 +1,9 @@
-package com.marshalldbrain.pulsar.colony.districts
+package com.marshalldbrain.pulsar.colony.production
 
 import com.marshalldbrain.pulsar.colony.construction.Constructable
 import com.marshalldbrain.pulsar.colony.construction.ConstructionTask
 import com.marshalldbrain.pulsar.colony.construction.ConstructionType
+import com.marshalldbrain.pulsar.colony.production.jobs.Workable
 import com.marshalldbrain.pulsar.resources.Resource
 import com.marshalldbrain.pulsar.resources.ResourceCollection
 import com.marshalldbrain.pulsar.resources.times
@@ -10,14 +11,14 @@ import com.marshalldbrain.pulsar.resources.times
 data class District (
 	var type: DistrictType = DistrictType.emptyDistrict,
 	var amount: Int = 0
-) : Constructable, ResourceCollection {
+) : Constructable, ResourceCollection, Workable {
 	
 	override val time: Int
 		get() = type.time
 	override val cost: Set<Resource>
 		get() = type.cost
 	override val id: String
-		get() = "${type.id} District"
+		get() = type.id
 	override val income: Set<Resource>
 		get() {
 			return if(amount == 0) {
@@ -26,6 +27,7 @@ data class District (
 				(type.production + type.upkeep * -1) * amount
 			}
 		}
+	override val jobGroups = type.jobs.associateBy { it.jobType }
 	
 	fun build(amount: Int = 1): ConstructionTask {
 		
