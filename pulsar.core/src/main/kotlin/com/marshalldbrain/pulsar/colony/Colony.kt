@@ -1,13 +1,14 @@
 package com.marshalldbrain.pulsar.colony
 
 import com.marshalldbrain.pulsar.colony.construction.ConstructionManager
-import com.marshalldbrain.pulsar.colony.districts.District
-import com.marshalldbrain.pulsar.colony.districts.DistrictType
+import com.marshalldbrain.pulsar.colony.production.District
+import com.marshalldbrain.pulsar.colony.production.DistrictType
+import com.marshalldbrain.pulsar.colony.production.jobs.JobManager
 import com.marshalldbrain.pulsar.resources.ResourceBucket
 import com.marshalldbrain.pulsar.resources.ResourceMaster
 
 class Colony(private val allDistrictTypes: Set<DistrictType>, teller: ResourceMaster) {
-	
+	val jobManager = JobManager()
 	val districts = MutableList(5) {
 		District()
 	}
@@ -22,6 +23,8 @@ class Colony(private val allDistrictTypes: Set<DistrictType>, teller: ResourceMa
 		}
 		
 		teller.sourceList.add(resourceBucket)
+		
+		jobManager.addAll(districts)
 		
 	}
 	
