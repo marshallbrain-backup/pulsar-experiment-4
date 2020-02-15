@@ -1,5 +1,6 @@
-package com.marshalldbrain.pulsar.colony.districts
+package com.marshalldbrain.pulsar.colony.production
 
+import com.marshalldbrain.pulsar.colony.production.jobs.JobGroup
 import com.marshalldbrain.pulsar.resources.Resource
 
 data class DistrictType (
@@ -9,7 +10,8 @@ data class DistrictType (
 	val starting: Boolean = false,
 	val cost: Set<Resource> = emptySet(),
 	val production: Set<Resource> = emptySet(),
-	val upkeep: Set<Resource> = emptySet()
+	val upkeep: Set<Resource> = emptySet(),
+	val jobs: Set<JobGroup> = emptySet()
 ) {
 	
 	val isTooled: Boolean
