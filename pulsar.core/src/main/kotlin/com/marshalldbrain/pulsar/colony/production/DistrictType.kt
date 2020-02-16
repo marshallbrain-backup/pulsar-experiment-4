@@ -1,4 +1,4 @@
-package com.marshalldbrain.pulsar.colony.districts
+package com.marshalldbrain.pulsar.colony.production
 
 import com.marshalldbrain.pulsar.resources.Resource
 
