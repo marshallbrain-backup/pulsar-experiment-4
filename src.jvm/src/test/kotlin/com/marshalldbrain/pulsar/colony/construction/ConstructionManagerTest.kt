@@ -72,7 +72,7 @@ private class TaskGen() : Gen<ConstructionTask> {
 	override fun random(): Sequence<ConstructionTask> {
 		return generateSequence {
 			ConstructionTask(
-				ConstructionTask.Type.BUILD,
+				ConstructionType.BUILD,
 				Task(
 					"Task",
 					Random.Default.nextInt(1, 13),

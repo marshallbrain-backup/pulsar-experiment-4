@@ -1,13 +1,12 @@
 package com.marshalldbrain.pulsar.colony.construction
 
-import com.marshalldbrain.pulsar.colony.districts.District
-import com.marshalldbrain.pulsar.resources.Resource
 import kotlin.math.absoluteValue
 
 class ConstructionTask(
-	val type: Type,
+	val type: ConstructionType,
 	val target: Constructable,
-	val amount: Int
+	val amount: Int,
+	private val onComplete: () -> Unit = {}
 ) {
 	
 	//"Project"
@@ -29,22 +28,11 @@ class ConstructionTask(
 		val remaining = timeRemaining - timePass
 		if (remaining <= 0) {
 			timeRemaining = 0
+			onComplete.invoke()
 			return remaining.absoluteValue
 		}
 		timeRemaining = remaining
 		return -1
-	}
-	
-	enum class Type {
-		
-		BUILD {
-			override fun name(target: Constructable): String {
-				return "Building ${target.name}"
-			}
-		};
-		
-		abstract fun name(target: Constructable): String
-		
 	}
 	
 }
