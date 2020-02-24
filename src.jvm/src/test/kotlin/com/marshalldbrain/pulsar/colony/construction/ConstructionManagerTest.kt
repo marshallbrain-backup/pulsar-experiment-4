@@ -2,14 +2,11 @@ package com.marshalldbrain.pulsar.colony.construction
 
 import com.marshalldbrain.ion.sequences.randomIntRange
 import com.marshalldbrain.pulsar.resources.Resource
-import com.marshalldbrain.pulsar.resources.ResourceType
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.properties.Gen
 import io.kotlintest.properties.assertAll
-import io.kotlintest.properties.forAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.FunSpec
-import io.mockk.mockk
 import kotlin.random.Random
 
 class ConstructionManagerTest : FunSpec({
@@ -86,7 +83,7 @@ private class TaskGen() : Gen<ConstructionTask> {
 }
 
 private class Task (
-	override val name: String,
+	override val id: String,
 	override val time: Int,
 	override val cost: List<Resource>
 ) : Constructable {
