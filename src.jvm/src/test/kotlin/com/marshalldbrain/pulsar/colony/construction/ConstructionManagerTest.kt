@@ -86,6 +86,6 @@ private class Task (
 	override val id: String,
 	override val time: Int,
 	override val cost: List<Resource>
-) : Constructable {
+) : Constructible {
 
 }

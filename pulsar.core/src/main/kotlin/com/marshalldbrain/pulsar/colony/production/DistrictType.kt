@@ -1,6 +1,6 @@
 package com.marshalldbrain.pulsar.colony.production
 
-import com.marshalldbrain.pulsar.colony.construction.Constructable
+import com.marshalldbrain.pulsar.colony.construction.Constructible
 import com.marshalldbrain.pulsar.resources.Resource
 
 data class DistrictType (
@@ -11,7 +11,7 @@ data class DistrictType (
 	override val cost: List<Resource> = emptyList(),
 	val production: List<Resource> = emptyList(),
 	val upkeep: List<Resource> = emptyList()
-) : Constructable {
+) : Constructible {
 	
 	val isTooled: Boolean
 		get() = this != emptyDistrict

@@ -4,7 +4,7 @@ import kotlin.math.absoluteValue
 
 class ConstructionTask(
 	val type: ConstructionType,
-	val target: Constructable,
+	val target: Constructible,
 	val amount: Int,
 	private val onComplete: () -> Unit = {}
 ) {

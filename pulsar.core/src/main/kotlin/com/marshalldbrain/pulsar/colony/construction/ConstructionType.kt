@@ -3,11 +3,11 @@ package com.marshalldbrain.pulsar.colony.construction
 enum class ConstructionType {
 	
 	BUILD {
-		override fun name(target: Constructable): String {
+		override fun name(target: Constructible): String {
 			return "Building ${target.id}"
 		}
 	};
 	
-	abstract fun name(target: Constructable): String
+	abstract fun name(target: Constructible): String
 	
 }
