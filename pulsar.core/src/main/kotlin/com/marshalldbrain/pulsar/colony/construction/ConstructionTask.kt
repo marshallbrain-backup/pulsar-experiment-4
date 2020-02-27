@@ -16,23 +16,45 @@ class ConstructionTask(
 	// "Time\nRemaining"
 	// "Estimated Completion\nDate"
 	
-	var timeRemaining: Int = amount * target.time
+	var timeRemaining: Int = target.time
 		private set
-	val amountRemaining: Int
-		get() = timeRemaining / target.time + 1
+	var amountRemaining: Int = amount
+		private set
 	
 	val projectName: String
 		get() = type.name(target)
 	
 	fun passTime(timePass: Int): Int {
-		val remaining = timeRemaining - timePass
-		if (remaining <= 0) {
-			timeRemaining = 0
-			onComplete.invoke()
-			return remaining.absoluteValue
+		
+		if (target.time == 0) {
+			repeat(amount) {
+				runOnComplete()
+			}
+			amountRemaining = 0
+			return 0
 		}
-		timeRemaining = remaining
-		return -1
+		
+		var remaining = timePass
+		do {
+			remaining -= timeRemaining
+			if (remaining >= 0) {
+				amountRemaining--
+				timeRemaining = target.time
+				runOnComplete()
+			}
+		} while (remaining > 0 && amountRemaining > 0)
+		
+		if (amountRemaining <= 0) {
+			return remaining
+		}
+		
+		timeRemaining = remaining.absoluteValue
+		return 0
+		
+	}
+	
+	fun runOnComplete() {
+		onComplete.invoke()
 	}
 	
 }
