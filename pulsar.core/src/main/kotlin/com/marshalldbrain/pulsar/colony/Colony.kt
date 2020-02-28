@@ -9,12 +9,12 @@ import com.marshalldbrain.pulsar.resources.ResourceType
 
 class Colony(allDistrictTypes: Set<DistrictType>) {
 	
-	private val recourseIncome = ResourceIncome()
+	private val resourceIncome = ResourceIncome()
 	private val constructionManager = ConstructionManager()
-	private val districtManager = DistrictManager(allDistrictTypes)
+	private val districtManager = DistrictManager(allDistrictTypes, resourceIncome)
 	
 	val income: Map<ResourceType, Int>
-		get() = recourseIncome.income
+		get() = resourceIncome.income
 	val districts: Map<DistrictType, Int>
 		get() = districtManager.districts
 	
