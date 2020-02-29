@@ -27,7 +27,7 @@ class DistrictManagerTest : FunSpec({
 			DistrictType("3")
 		)
 		
-		val dm = DistrictManager(districts)
+		val dm = DistrictManager(districts, mockk(relaxUnitFun = true), mockk(relaxUnitFun = true))
 		
 		dm.districtTypes.shouldContainExactly(expected)
 	
@@ -47,7 +47,7 @@ class DistrictManagerTest : FunSpec({
 			DistrictType("3", starting = true)
 		)
 		
-		val dm = DistrictManager(districts)
+		val dm = DistrictManager(districts, mockk(relaxUnitFun = true), mockk(relaxUnitFun = true))
 		
 		dm.districts.keys.shouldContainExactly(expected)
 		
@@ -59,7 +59,7 @@ class DistrictManagerTest : FunSpec({
 			
 			val type = DistrictType("1", 5, starting = true)
 			
-			val dm = DistrictManager(setOf(type))
+			val dm = DistrictManager(setOf(type), mockk(relaxUnitFun = true), mockk(relaxUnitFun = true))
 			val cm = ConstructionManager(mockk(relaxUnitFun = true))
 			
 			val task = dm.createConstructionTask(type, ConstructionType.BUILD, 4)
@@ -71,39 +71,56 @@ class DistrictManagerTest : FunSpec({
 			
 		}
 		
-		test("Build task") {
+		context("Build task") {
 			
-			val type = DistrictType("1", starting = true)
+			test("Amount updates") {
 			
+				val type = DistrictType("1", starting = true)
+				
+				
+				val dm = DistrictManager(setOf(type), mockk(relaxUnitFun = true), mockk(relaxUnitFun = true))
+				
+				val task = dm.createConstructionTask(type, ConstructionType.BUILD, 1)
+				task.runOnComplete()
+				
+				dm.districts[type] shouldBe 1
 			
-			val dm = DistrictManager(setOf(type))
+			}
 			
-			val task = dm.createConstructionTask(type, ConstructionType.BUILD, 1)
-			task.runOnComplete()
+			test("Income updates") {
+				
+				val type = DistrictType(
+					"1", starting = true,
+					production = mapOf(ResourceType("1") to 4),
+					upkeep = mapOf(ResourceType("1") to 1)
+				)
+				val income = ResourceIncome()
+				val dm = DistrictManager(setOf(type), income, mockk(relaxUnitFun = true))
+				val expected = mapOf(ResourceType("1") to 3)
+				val task = dm.createConstructionTask(type, ConstructionType.BUILD, 1)
+				
+				task.runOnComplete()
+				
+				income.income.shouldContainExactly(expected)
+				
+			}
 			
-			dm.districts[type] shouldBe 1
-			
-		}
-		
-		test("Build task income update") {
-			
-			val type = DistrictType(
-				"1", starting = true,
-				production = mapOf(ResourceType("+") to 1),
-				upkeep = mapOf(ResourceType("-") to 1)
-			)
-			
-			val income = ResourceIncome()
-			val dm = DistrictManager(setOf(type), income)
-			
-			val task = dm.createConstructionTask(type, ConstructionType.BUILD, 1)
-			task.runOnComplete()
-			
-			val expected = mapOf(
-				ResourceType("+") to 1,
-				ResourceType("-") to -1
-			)
-			income.income.shouldContainExactly(expected)
+			test("Jobs updates") {
+				
+				val type = DistrictType(
+					"1", starting = true,
+					jobs = mapOf(JobType("test") to 1)
+				)
+				val jobs = JobManager(mockk(relaxUnitFun = true))
+				val dm = DistrictManager(setOf(type), mockk(relaxUnitFun = true), jobs)
+				val expected = mapOf(JobType("test") to 1)
+				val task = dm.createConstructionTask(type, ConstructionType.BUILD, 1)
+				
+				task.runOnComplete()
+				
+				jobs.jobs.shouldContainExactly(expected)
+				
+			}
 			
 		}
 		
