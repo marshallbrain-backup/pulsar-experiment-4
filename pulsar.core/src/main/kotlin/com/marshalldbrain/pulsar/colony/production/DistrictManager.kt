@@ -7,6 +7,7 @@ import com.marshalldbrain.pulsar.resources.ResourceUpdater
 class DistrictManager(
 	private val allDistrictTypes: Set<DistrictType>,
 	private val resourceUpdater: ResourceUpdater,
+	private val jobUpdater: JobUpdater
 ) {
 	
 	private val mutableDistrictMap = districtTypes.filter { it.starting }.associateWith { 0 }.toMutableMap()
@@ -32,6 +33,7 @@ class DistrictManager(
 				
 				resourceUpdater.update(target.production)
 				resourceUpdater.update(target.upkeep, -1)
+				jobUpdater.update(target.jobs)
 				
 			}}
 		}
