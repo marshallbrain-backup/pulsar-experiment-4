@@ -1,13 +1,12 @@
 package com.marshalldbrain.pulsar.colony.construction
 
-import com.marshalldbrain.pulsar.colony.districts.District
-import com.marshalldbrain.pulsar.resources.Resource
 import kotlin.math.absoluteValue
 
 class ConstructionTask(
-	val type: Type,
-	val target: Constructable,
-	val amount: Int
+	val type: ConstructionType,
+	val target: Constructible,
+	val amount: Int,
+	private val onComplete: () -> Unit = {}
 ) {
 	
 	//"Project"
@@ -17,34 +16,45 @@ class ConstructionTask(
 	// "Time\nRemaining"
 	// "Estimated Completion\nDate"
 	
-	var timeRemaining: Int = amount * target.time
+	var timeRemaining: Int = target.time
 		private set
-	val amountRemaining: Int
-		get() = timeRemaining / target.time + 1
+	var amountRemaining: Int = amount
+		private set
 	
 	val projectName: String
 		get() = type.name(target)
 	
 	fun passTime(timePass: Int): Int {
-		val remaining = timeRemaining - timePass
-		if (remaining <= 0) {
-			timeRemaining = 0
-			return remaining.absoluteValue
+		
+		if (target.time == 0) {
+			repeat(amount) {
+				runOnComplete()
+			}
+			amountRemaining = 0
+			return 0
 		}
-		timeRemaining = remaining
-		return -1
+		
+		var remaining = timePass
+		do {
+			remaining -= timeRemaining
+			if (remaining >= 0) {
+				amountRemaining--
+				timeRemaining = target.time
+				runOnComplete()
+			}
+		} while (remaining > 0 && amountRemaining > 0)
+		
+		if (amountRemaining <= 0) {
+			return remaining
+		}
+		
+		timeRemaining = remaining.absoluteValue
+		return 0
+		
 	}
 	
-	enum class Type {
-		
-		BUILD {
-			override fun name(target: Constructable): String {
-				return "Building ${target.name}"
-			}
-		};
-		
-		abstract fun name(target: Constructable): String
-		
+	fun runOnComplete() {
+		onComplete.invoke()
 	}
 	
 }
