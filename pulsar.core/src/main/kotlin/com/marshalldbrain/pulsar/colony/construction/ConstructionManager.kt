@@ -1,14 +1,18 @@
 package com.marshalldbrain.pulsar.colony.construction
 
 import com.marshalldbrain.ion.collections.queueOf
+import com.marshalldbrain.pulsar.resources.ResourceBucket
+import com.marshalldbrain.pulsar.resources.ResourceTeller
 
-class ConstructionManager {
+class ConstructionManager(private val teller: ResourceTeller) {
 	
 	val constructionQueue = queueOf<ConstructionTask>()
 	
 	var currentTask: ConstructionTask? = null
 	
 	fun addToQueue(task: ConstructionTask) {
+		
+		teller.withdrawAll(task.target.cost)
 		
 		if (task.amountRemaining <= 0) {
 			return
