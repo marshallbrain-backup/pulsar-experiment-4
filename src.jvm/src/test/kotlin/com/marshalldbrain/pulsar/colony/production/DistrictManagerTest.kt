@@ -6,12 +6,10 @@ import com.marshalldbrain.pulsar.resources.ResourceIncome
 import com.marshalldbrain.pulsar.resources.ResourceType
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.maps.shouldContain
 import io.kotlintest.matchers.maps.shouldContainExactly
-import io.kotlintest.matchers.maps.shouldContainKeys
-import io.kotlintest.matchers.maps.shouldNotContainExactly
 import io.kotlintest.specs.FunSpec
 import io.kotlintest.shouldBe
+import io.mockk.mockk
 
 class DistrictManagerTest : FunSpec({
 	
@@ -62,7 +60,7 @@ class DistrictManagerTest : FunSpec({
 			val type = DistrictType("1", 5, starting = true)
 			
 			val dm = DistrictManager(setOf(type))
-			val cm = ConstructionManager()
+			val cm = ConstructionManager(mockk(relaxUnitFun = true))
 			
 			val task = dm.createConstructionTask(type, ConstructionType.BUILD, 4)
 			cm.addToQueue(task)
