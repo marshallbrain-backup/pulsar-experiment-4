@@ -8,19 +8,26 @@ class DistrictManager(
 	private val allDistrictTypes: Set<DistrictType>,
 	private val resourceUpdater: ResourceUpdater,
 	private val jobUpdater: JobUpdater
-) {
+) : DistrictInfo {
 	
-	private val mutableDistrictMap = districtTypes.filter { it.starting }.associateWith { 0 }.toMutableMap()
-	private val max = 5
+	override val max = 5
 	
-	val districtTypes: Set<DistrictType>
-		get() {
-			return allDistrictTypes.filter { it.possible }.toSet()
-		}
-	val districts: Map<DistrictType, Int>
-		get() = mutableDistrictMap.toMap()
+	private val mutableDistrictMap = possibleTypes
+		.filter { it.starting }
+		.take(max)
+		.associateWith { 0 }
+		.toMutableMap()
 	
-	fun createConstructionTask(target: DistrictType, type: ConstructionType, amount: Int): ConstructionTask {
+	override val remaining: Int
+		get() = max - districts.size
+	override val possibleTypes: Set<DistrictType>
+		get() = allDistrictTypes.filter { it.possible }.toSet()
+	override val remainingTypes: Set<DistrictType>
+		get() = allDistrictTypes - districts.keys
+	override val districts: Map<DistrictType, Int>
+		get() = mutableDistrictMap
+	
+	override fun createConstructionTask(target: DistrictType, type: ConstructionType, amount: Int): ConstructionTask {
 		
 		if (!districts.containsKey(target)) {
 			throw NoSuchElementException()
@@ -41,5 +48,17 @@ class DistrictManager(
 		return ConstructionTask(type, target, amount, onComplete)
 		
 	}
+	
+}
+
+interface DistrictInfo {
+	
+	val max: Int
+	val remaining: Int
+	val districts: Map<DistrictType, Int>
+	val possibleTypes: Set<DistrictType>
+	val remainingTypes: Set<DistrictType>
+	
+	fun createConstructionTask(target: DistrictType, type: ConstructionType, amount: Int): ConstructionTask
 	
 }
