@@ -14,7 +14,7 @@ class ResourceIncome(private val incomeUpdater: ResourceUpdater? = null) : Resou
 		change.forEach { (k, v) ->
 			mutableIncome[k] = mutableIncome.getOrDefault(k, 0) + v * modifier
 		}
-		incomeUpdater?.update(change)
+		incomeUpdater?.update(change, modifier)
 	}
 	
 }
