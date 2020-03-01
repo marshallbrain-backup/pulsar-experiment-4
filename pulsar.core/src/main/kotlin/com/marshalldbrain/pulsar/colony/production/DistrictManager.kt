@@ -2,12 +2,13 @@ package com.marshalldbrain.pulsar.colony.production
 
 import com.marshalldbrain.pulsar.colony.construction.ConstructionTask
 import com.marshalldbrain.pulsar.colony.construction.ConstructionType
-import com.marshalldbrain.pulsar.resources.ResourcePing
+import com.marshalldbrain.pulsar.resources.ResourceUpdater
 
 class DistrictManager(
 	private val allDistrictTypes: Set<DistrictType>,
-	private val resourcePing: ResourcePing? = null
-	) {
+	private val resourceUpdater: ResourceUpdater,
+	private val jobUpdater: JobUpdater
+) {
 	
 	private val mutableDistrictMap = districtTypes.filter { it.starting }.associateWith { 0 }.toMutableMap()
 	private val max = 5
@@ -30,15 +31,15 @@ class DistrictManager(
 				
 				mutableDistrictMap[target] = mutableDistrictMap.getValue(target) + 1
 				
-				if (resourcePing != null) {
-					resourcePing.pingChange(target.production)
-					resourcePing.pingChange(target.upkeep, -1)
-				}
+				resourceUpdater.update(target.production)
+				resourceUpdater.update(target.upkeep, -1)
+				jobUpdater.update(target.jobs)
 				
 			}}
 		}
 		
 		return ConstructionTask(type, target, amount, onComplete)
+		
 	}
 	
 }

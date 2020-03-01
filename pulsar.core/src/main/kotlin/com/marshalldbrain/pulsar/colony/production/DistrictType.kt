@@ -10,7 +10,8 @@ data class DistrictType (
 	val starting: Boolean = false,
 	override val cost: Map<ResourceType, Int> = emptyMap(),
 	val production: Map<ResourceType, Int> = emptyMap(),
-	val upkeep: Map<ResourceType, Int> = emptyMap()
+	val upkeep: Map<ResourceType, Int> = emptyMap(),
+	val jobs: Map<JobType, Int> = emptyMap()
 ) : Constructible {
 	
 	val isTooled: Boolean

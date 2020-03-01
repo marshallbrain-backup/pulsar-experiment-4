@@ -7,7 +7,7 @@ import io.kotlintest.specs.FunSpec
 
 class ResourceIncomeTest : FunSpec({
 	
-	test("pingChange") {
+	test("Update") {
 		
 		val type1 = ResourceType("+")
 		val type2 = ResourceType("-")
@@ -17,8 +17,8 @@ class ResourceIncomeTest : FunSpec({
 		val ping2 = mapOf(type1 to 5, type2 to -5)
 		val expected = mapOf(type1 to 10, type2 to 0)
 		
-		income.pingChange(ping1)
-		income.pingChange(ping2)
+		income.update(ping1)
+		income.update(ping2)
 		
 		income.income.shouldContainExactly(expected)
 		
