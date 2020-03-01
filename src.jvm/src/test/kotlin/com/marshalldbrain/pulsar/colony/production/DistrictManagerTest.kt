@@ -29,7 +29,7 @@ class DistrictManagerTest : FunSpec({
 		
 		val dm = DistrictManager(districts, mockk(relaxUnitFun = true), mockk(relaxUnitFun = true))
 		
-		dm.districtTypes.shouldContainExactly(expected)
+		dm.possibleTypes.shouldContainExactly(expected)
 	
 	}
 	
@@ -67,7 +67,7 @@ class DistrictManagerTest : FunSpec({
 			cm.tick(20)
 			
 			dm.districts[type] shouldBe 4
-			cm.constructionQueue.shouldBeEmpty()
+			cm.active.shouldBeEmpty()
 			
 		}
 		

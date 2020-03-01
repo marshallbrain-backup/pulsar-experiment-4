@@ -3,12 +3,17 @@ package com.marshalldbrain.pulsar.colony.construction
 import com.marshalldbrain.pulsar.resources.ResourceBucket
 import com.marshalldbrain.pulsar.resources.ResourceTeller
 import com.marshalldbrain.pulsar.resources.ResourceType
+import io.kotlintest.DisplayName
 import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldHaveSize
+import io.kotlintest.matchers.collections.shouldNotBeEmpty
 import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.FunSpec
 import io.mockk.every
 import io.mockk.mockk
+
 
 class ConstructionManagerTest : FunSpec({
 	
@@ -20,9 +25,10 @@ class ConstructionManagerTest : FunSpec({
 			val task = ConstructionTask(ConstructionType.BUILD, Task("task", 5, emptyMap()), 1)
 			
 			cm.addToQueue(task)
-			cm.tick(5)
 			
-			cm.constructionQueue.shouldBeEmpty()
+			cm.active.shouldContainExactly(task)
+			cm.tick(5)
+			cm.active.shouldBeEmpty()
 			
 		}
 		
@@ -33,7 +39,7 @@ class ConstructionManagerTest : FunSpec({
 			
 			cm.addToQueue(task)
 			
-			cm.constructionQueue.shouldBeEmpty()
+			cm.active.shouldBeEmpty()
 			
 		}
 		
@@ -45,10 +51,10 @@ class ConstructionManagerTest : FunSpec({
 			cm.addToQueue(task)
 			cm.tick(18)
 			
-			cm.constructionQueue.shouldBeEmpty()
-			cm.currentTask.shouldNotBeNull()
-			cm.currentTask!!.amountRemaining shouldBe 1
-			cm.currentTask!!.timeRemaining shouldBe 2
+			cm.queue.shouldBeEmpty()
+			cm.active.shouldHaveSize(1)
+			cm.active[0].amountRemaining shouldBe 1
+			cm.active[0].timeRemaining shouldBe 2
 			
 		}
 		
@@ -63,9 +69,9 @@ class ConstructionManagerTest : FunSpec({
 			tasks.forEach { cm.addToQueue(it) }
 			cm.tick(7)
 			
-			cm.constructionQueue.shouldBeEmpty()
-			cm.currentTask.shouldNotBeNull()
-			cm.currentTask!!.timeRemaining shouldBe 3
+			cm.queue.shouldBeEmpty()
+			cm.active.shouldHaveSize(1)
+			cm.active[0].timeRemaining shouldBe 3
 			
 		}
 		
@@ -82,7 +88,7 @@ class ConstructionManagerTest : FunSpec({
 		cm.addToQueue(task)
 		cm.tick(5)
 		
-		cm.constructionQueue.shouldBeEmpty()
+		cm.active.shouldBeEmpty()
 		complete shouldBe true
 		
 	}
@@ -98,7 +104,7 @@ class ConstructionManagerTest : FunSpec({
 		cm.addToQueue(task)
 		cm.tick(20)
 		
-		cm.constructionQueue.shouldBeEmpty()
+		cm.active.shouldBeEmpty()
 		number shouldBe 4
 		
 	}
