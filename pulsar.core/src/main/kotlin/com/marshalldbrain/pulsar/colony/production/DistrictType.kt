@@ -18,7 +18,7 @@ data class DistrictType (
 		get() = this != emptyDistrict
 	
 	companion object {
-		val emptyDistrict = DistrictType("")
+		val emptyDistrict = DistrictType("Untooled")
 	}
 	
 }
