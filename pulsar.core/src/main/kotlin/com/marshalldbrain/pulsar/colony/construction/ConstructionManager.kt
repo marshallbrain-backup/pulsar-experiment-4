@@ -4,12 +4,22 @@ import com.marshalldbrain.ion.collections.queueOf
 import com.marshalldbrain.pulsar.resources.ResourceBucket
 import com.marshalldbrain.pulsar.resources.ResourceTeller
 
-class ConstructionManager(private val teller: ResourceTeller) {
+class ConstructionManager(private val teller: ResourceTeller) : ConstructionInfo {
 	
 	private val constructionQueue = queueOf<ConstructionTask>()
 	private var currentTask: ConstructionTask? = null
 	
-	var currentTask: ConstructionTask? = null
+	override val active: List<ConstructionTask>
+		get() {
+			val task = currentTask
+			return if (task != null) {
+				listOf(task)
+			} else {
+				emptyList()
+			}
+		}
+	override val queue: Collection<ConstructionTask>
+		get() = constructionQueue
 	
 	fun addToQueue(task: ConstructionTask) {
 		
@@ -44,4 +54,11 @@ class ConstructionManager(private val teller: ResourceTeller) {
 		
 	}
 	
+}
+
+interface ConstructionInfo {
+	
+	val active: List<ConstructionTask>
+	val queue: Collection<ConstructionTask>
+
 }
