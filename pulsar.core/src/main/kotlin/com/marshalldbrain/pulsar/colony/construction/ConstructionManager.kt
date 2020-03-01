@@ -6,7 +6,8 @@ import com.marshalldbrain.pulsar.resources.ResourceTeller
 
 class ConstructionManager(private val teller: ResourceTeller) {
 	
-	val constructionQueue = queueOf<ConstructionTask>()
+	private val constructionQueue = queueOf<ConstructionTask>()
+	private var currentTask: ConstructionTask? = null
 	
 	var currentTask: ConstructionTask? = null
 	
@@ -14,18 +15,17 @@ class ConstructionManager(private val teller: ResourceTeller) {
 		
 		teller.withdrawAll(task.target.cost)
 		
-		if (task.amountRemaining <= 0) {
-			return
-		}
 		if (task.target.time == 0) {
 			task.passTime(0)
 		}
-		if (currentTask == null) {
-			currentTask = task
-			return
-		}
 		
-		constructionQueue.add(task)
+		if (task.amountRemaining > 0) {
+			if (currentTask == null) {
+				currentTask = task
+			} else {
+				constructionQueue.add(task)
+			}
+		}
 		
 	}
 	
@@ -33,24 +33,13 @@ class ConstructionManager(private val teller: ResourceTeller) {
 		
 		var remaining = amount
 		
-		while (true) {
-			val task = currentTask
-			if (task == null) {
-				return
-			} else {
+		while (remaining > 0 && currentTask != null) {
 				
-				remaining = task.passTime(remaining)
-				if (remaining <= 0) {
-					return
-				}
-				
-				if (task.amountRemaining > 0) {
-					throw Exception("Invalid state, task has positive amount remaining")
-				}
-				
+			remaining = currentTask!!.passTime(remaining)
+			if (currentTask!!.amountRemaining <= 0) {
 				currentTask = constructionQueue.poll()
-				
 			}
+			
 		}
 		
 	}
