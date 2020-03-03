@@ -22,7 +22,7 @@ class ConstructionManagerTest : FunSpec({
 		test("Equal time passed") {
 		
 			val cm = ConstructionManager(mockk(relaxUnitFun = true))
-			val task = ConstructionTask(ConstructionType.BUILD, Task("task", 5, emptyMap()), 1)
+			val task = ConstructionTask("", emptyMap(), 5, 1)
 			
 			cm.addToQueue(task)
 			
@@ -35,7 +35,7 @@ class ConstructionManagerTest : FunSpec({
 		test("0 time instantly finishes") {
 			
 			val cm = ConstructionManager(mockk(relaxUnitFun = true))
-			val task = ConstructionTask(ConstructionType.BUILD, Task("task", 0, emptyMap()), 1)
+			val task = ConstructionTask("", emptyMap(), 0, 1)
 			
 			cm.addToQueue(task)
 			
@@ -46,7 +46,7 @@ class ConstructionManagerTest : FunSpec({
 		test("Task with multiple amount") {
 			
 			val cm = ConstructionManager(mockk(relaxUnitFun = true))
-			val task = ConstructionTask(ConstructionType.BUILD, Task("task1", 5, emptyMap()), 4)
+			val task = ConstructionTask("", emptyMap(), 5, 4)
 			
 			cm.addToQueue(task)
 			cm.tick(18)
@@ -62,8 +62,8 @@ class ConstructionManagerTest : FunSpec({
 			
 			val cm = ConstructionManager(mockk(relaxUnitFun = true))
 			val tasks = listOf(
-				ConstructionTask(ConstructionType.BUILD, Task("task1", 5, emptyMap()), 1),
-				ConstructionTask(ConstructionType.BUILD, Task("task2", 5, emptyMap()), 1)
+				ConstructionTask("", emptyMap(), 5, 1),
+				ConstructionTask("", emptyMap(), 5, 1)
 			)
 			
 			tasks.forEach { cm.addToQueue(it) }
@@ -82,7 +82,7 @@ class ConstructionManagerTest : FunSpec({
 		var complete = false
 		
 		val cm = ConstructionManager(mockk(relaxUnitFun = true))
-		val task = ConstructionTask(ConstructionType.BUILD, Task("Task",5, emptyMap()), 1)
+		val task = ConstructionTask("", emptyMap(), 5, 1)
 		{ complete = true }
 		
 		cm.addToQueue(task)
@@ -98,7 +98,7 @@ class ConstructionManagerTest : FunSpec({
 		var number = 0
 		
 		val cm = ConstructionManager(mockk(relaxUnitFun = true))
-		val task = ConstructionTask(ConstructionType.BUILD, Task("Task",5, emptyMap()), 4)
+		val task = ConstructionTask("", emptyMap(), 5, 4)
 		{ number++ }
 		
 		cm.addToQueue(task)
@@ -109,12 +109,4 @@ class ConstructionManagerTest : FunSpec({
 		
 	}
 	
-}) {
-	
-	private class Task (
-		override val id: String,
-		override val time: Int,
-		override val cost: Map<ResourceType, Int>
-	) : Constructible
-	
-}
+})
