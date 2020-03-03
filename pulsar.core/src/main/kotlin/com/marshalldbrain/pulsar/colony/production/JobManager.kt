@@ -1,5 +1,6 @@
 package com.marshalldbrain.pulsar.colony.production
 
+import com.marshalldbrain.ion.collections.getOrDefault
 import com.marshalldbrain.pulsar.resources.ResourceType
 import com.marshalldbrain.pulsar.resources.ResourceUpdater
 
@@ -13,9 +14,9 @@ class JobManager(private val resourceUpdater: ResourceUpdater) : JobUpdater {
 	override fun update(change: Map<JobType, Int>, modifier: Int) {
 		
 		change.forEach { (k, v) ->
-			mutableJobs[k] = mutableJobs[k]?:0 + v * 1
-			resourceUpdater.update(k.production, v)
-			resourceUpdater.update(k.upkeep, -v)
+			mutableJobs[k] = mutableJobs.getOrDefault(k, 0) + v * modifier
+			resourceUpdater.update(k.production, v * modifier)
+			resourceUpdater.update(k.upkeep, -v * modifier)
 		}
 		
 	}
