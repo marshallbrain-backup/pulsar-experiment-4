@@ -1,10 +1,12 @@
 package com.marshalldbrain.pulsar.colony.construction
 
+import com.marshalldbrain.pulsar.resources.ResourceType
 import kotlin.math.absoluteValue
 
 class ConstructionTask(
-	val type: ConstructionType,
-	val target: Constructible,
+	val type: String,
+	val cost: Map<ResourceType, Int>,
+	val time: Int,
 	val amount: Int,
 	private val onComplete: () -> Unit = {}
 ) {
@@ -16,17 +18,17 @@ class ConstructionTask(
 	// "Time\nRemaining"
 	// "Estimated Completion\nDate"
 	
-	var timeRemaining: Int = target.time
+	var timeRemaining: Int = time
 		private set
 	var amountRemaining: Int = amount
 		private set
 	
 	val projectName: String
-		get() = type.name(target)
+		get() = type
 	
 	fun passTime(timePass: Int): Int {
 		
-		if (target.time == 0) {
+		if (time == 0) {
 			repeat(amount) {
 				runOnComplete()
 			}
@@ -39,7 +41,7 @@ class ConstructionTask(
 			remaining -= timeRemaining
 			if (remaining >= 0) {
 				amountRemaining--
-				timeRemaining = target.time
+				timeRemaining = time
 				runOnComplete()
 			}
 		} while (remaining > 0 && amountRemaining > 0)

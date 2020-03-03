@@ -23,9 +23,9 @@ class ConstructionManager(private val teller: ResourceTeller) : ConstructionInfo
 	
 	fun addToQueue(task: ConstructionTask) {
 		
-		teller.withdrawAll(task.target.cost)
+		teller.withdrawAll(task.cost)
 		
-		if (task.target.time == 0) {
+		if (task.time == 0) {
 			task.passTime(0)
 		}
 		
